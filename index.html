@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      .btn-primary {
+        color: #fff;
+        background-color: #10366e;
+        border-color: #060f1c;
+      }
+
+      textarea {
+        /* background: url(http://i.imgur.com/2cOaJ.png); */
+        background-attachment: local;
+        background-repeat: no-repeat;
+        padding-left: 35px;
+        padding-top: 10px;
+        border-color: #ccc;
+      }
+    </style>
+
+    <title>Compare Content</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="d-flex bd-highlight">
+        <div class="p-2 flex-grow-1 bd-highlight">
+          <div class="container">
+            <h3 class="fw-bold">Compare Content</h3>
+            <p class="col-md-8 fs-4">Compare Content/Code/JSON !! 😉</p>
+          </div>
+        </div>
+        <div class="p-2 bd-highlight">
+          <a
+            class="btn btn-primary"
+            type="button"
+            href="https://preetranjan.github.io/format-json/"
+          >
+            Home
+          </a>
+          <button class="btn btn-primary" type="button" id="btn-diff">
+            Get Diffrence
+          </button>
+        </div>
+        <div class="p-2 bd-highlight">
+          <div class="dropdown">
+            <a
+              class="btn btn-light dropdown-toggle"
+              href="#"
+              role="button"
+              id="dropdownMenuLink"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              More
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="https://preetranjan.github.io/compare-json/"
+                  >Compare JSON</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <a
+                    class="dropdown-item"
+                    href="https://preetranjan.github.io/deep-compare-json/"
+                    >Deep Compare JSON</a
+                  >
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <div class="container">
+                <h3 class="fw-bold">Left</h3>
+              </div>
+            </div>
+
+            <div class="p-2 bd-highlight">
+              <button
+                class="btn btn-secondary btn-sm"
+                type="button"
+                id="btncopy"
+              >
+                Copy
+              </button>
+            </div>
+            <div class="p-2 bd-highlight">
+              <button
+                class="btn btn-secondary btn-sm"
+                type="button"
+                onclick="formatJsonArea('left')"
+              >
+                Format
+              </button>
+            </div>
+          </div>
+          <textarea
+            id="left"
+            style="min-width: 100%; font-family: consolas"
+            class="form-control text-area"
+            spellcheck="false"
+            rows="20"
+          ></textarea>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+              <div class="container">
+                <h3 class="fw-bold">Right</h3>
+              </div>
+            </div>
+
+            <div class="p-2 bd-highlight">
+              <button
+                class="btn btn-secondary btn-sm"
+                type="button"
+                id="btncopy"
+              >
+                Copy
+              </button>
+            </div>
+            <div class="p-2 bd-highlight">
+              <button
+                class="btn btn-secondary btn-sm"
+                type="button"
+                onclick="formatJsonArea('right')"
+              >
+                Format
+              </button>
+            </div>
+          </div>
+          <textarea
+            id="right"
+            style="min-width: 100%; font-family: consolas"
+            class="form-control text-area"
+            spellcheck="false"
+            rows="20"
+          ></textarea>
+        </div>
+      </div>
+      <div class="mt-2" id="outputdiv">
+        <h3>Diffrence Output</h3>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="">Select Mode</label>
+              <select id="mode" class="form-control form-control-sm">
+                <option value="json" selected>json</option>
+                <option value="javascript">javascript</option>
+                <option value="csharp">C#</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="mt-2"
+          id="container"
+          style="min-width: 100%; height: 600px; border: 1px solid grey"
+        ></div>
+      </div>
+
+      <script src="./loader.js"></script>
+      <script>
+        require.config({
+          baseUrl:
+            "https://microsoft.github.io/monaco-editor/node_modules/monaco-editor/min/",
+        });
+
+        require(["vs/editor/editor.main"], function () {
+          var diffEditor = monaco.editor.createDiffEditor(
+            document.getElementById("container")
+          );
+
+          //   Promise.all([xhr("original.txt"), xhr("modified.txt")]).then(
+          //     function (r) {
+          //       var originalTxt = r[0].responseText;
+          //       var modifiedTxt = r[1].responseText;
+
+          //       diffEditor.setModel({
+          //         original: monaco.editor.createModel(originalTxt, "javascript"),
+          //         modified: monaco.editor.createModel(modifiedTxt, "javascript"),
+          //       });
+          //     }
+          //   );
+
+          Promise.all([Promise.resolve()]).then(function (r) {
+            var originalTxt = `{"rollno":13,"name":"Pritish"}`;
+
+            var modifiedTxt = `{"rollno":21,"name":"PREETish"}`;
+
+            diffEditor.setModel({
+              original: monaco.editor.createModel(originalTxt, selectedMode),
+              modified: monaco.editor.createModel(modifiedTxt, selectedMode),
+            });
+          });
+
+          var leftDiv = document.getElementById("left");
+          var rightDiv = document.getElementById("right");
+          var diffButton = document.getElementById("btn-diff");
+
+          var selectedMode = document.getElementById("mode").value;
+
+          diffButton.addEventListener("click", () => {
+            var originalTxt =
+              leftDiv.value.length == 0
+                ? `{"rollno":13,"name":"Pritish"}`
+                : leftDiv.value;
+            var modifiedTxt =
+              rightDiv.value.length == 0
+                ? `{"rollno":21,"name":"PREETish"}`
+                : rightDiv.value;
+
+            diffEditor.setModel({
+              original: monaco.editor.createModel(originalTxt, selectedMode),
+              modified: monaco.editor.createModel(modifiedTxt, selectedMode),
+            });
+
+            document.getElementById("outputdiv").scrollIntoView();
+          });
+        });
+      </script>
+      <script>
+        function xhr(url) {
+          var req = null;
+          return new Promise(
+            function (c, e) {
+              req = new XMLHttpRequest();
+              req.onreadystatechange = function () {
+                if (req._canceled) {
+                  return;
+                }
+
+                if (req.readyState === 4) {
+                  if (
+                    (req.status >= 200 && req.status < 300) ||
+                    req.status === 1223
+                  ) {
+                    c(req);
+                  } else {
+                    e(req);
+                  }
+                  req.onreadystatechange = function () {};
+                }
+              };
+
+              req.open("GET", url, true);
+              req.responseType = "";
+
+              req.send(null);
+            },
+            function () {
+              req._canceled = true;
+              req.abort();
+            }
+          );
+        }
+      </script>
+      <small>Developed with ❤ By PREETish</small>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // https://stackoverflow.com/questions/9236314/how-do-i-synchronize-the-scroll-position-of-two-divs/9236351
+
+      var isSyncingLeftScroll = false;
+      var isSyncingRightScroll = false;
+      var leftDiv = document.getElementById("left");
+      var rightDiv = document.getElementById("right");
+
+      leftDiv.onscroll = function () {
+        if (!isSyncingLeftScroll) {
+          isSyncingRightScroll = true;
+          rightDiv.scrollTop = this.scrollTop;
+        }
+        isSyncingLeftScroll = false;
+      };
+
+      rightDiv.onscroll = function () {
+        if (!isSyncingRightScroll) {
+          isSyncingLeftScroll = true;
+          leftDiv.scrollTop = this.scrollTop;
+        }
+        isSyncingRightScroll = false;
+      };
+
+      var copyButton = document.getElementById("btncopy");
+      copyButton.addEventListener("click", (event) => {
+        let inputJson = document.getElementById("input-area").value;
+        navigator.clipboard.writeText(inputJson);
+        console.log(event.target.innerText);
+        event.target.innerText = "Copied";
+      });
+
+      function formatJsonArea(element) {
+        let inputJson = document.getElementById(element);
+
+        const formatedJson = JSON.stringify(
+          JSON.parse(inputJson.value),
+          null,
+          4
+        );
+
+        inputJson.value = formatedJson;
+      }
+
+      function copyToClipBoard(element) {
+        let inputJson = document.getElementById(element).value;
+        navigator.clipboard.writeText(inputJson);
+      }
+    </script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
